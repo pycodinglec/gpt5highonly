@@ -21,14 +21,13 @@ if st.session_state.get("OPENAI_API_KEY", ""):
             st.markdown(prompt)
     
         with st.chat_message("assistant"):
-            stream = client.responses.create(
+            response = client.responses.create(
                 model="gpt-5",
                 reasoning={"effort": "high"},
                 input=[
                     {"role": m["role"], "content": m["content"]}
                     for m in st.session_state.messages
                 ],
-                stream=True,
             )
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+            st.write(response.output_text)
+        st.session_state.messages.append({"role": "assistant", "content": response.output_text})
